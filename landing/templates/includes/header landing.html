@@ -1,0 +1,55 @@
+<!-- Header / Navigation -->
+  <header class="navbar">
+    <div class="container">
+      <div class="navbar-content">
+        {% include 'includes/logo.html' %}
+
+        <nav class="desktop-nav">
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#testimonials">Testimonials</a>
+          <a href="#pricing">Pricing</a>
+        </nav>
+
+        <div class="desktop-actions">
+              <div class="desktop-actions">
+              <button class="btn btn-ghost" 
+              onclick="window.location.href='{% url 'signin' %}'">Log in</button>
+        
+              <button class="btn btn-primary"
+              onclick="window.location.href='{% url 'sign_up_new' %}'">Get Started</button>
+
+            </div>
+        </div>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile menu (hidden by default) -->
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="container">
+        <nav class="mobile-nav">
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#testimonials">Testimonials</a>
+          <a href="#pricing">Pricing</a>
+        </nav>
+        <div class="mobile-actions">
+          <button class="btn btn-outline btn-full" 
+            onclick="window.location.href='{% url 'signin' %}'">Log in</button>
+      
+            <button class="btn btn-primary btn-full"
+            onclick="window.location.href='{% url 'sign_up_new' %}'">Get Started</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+

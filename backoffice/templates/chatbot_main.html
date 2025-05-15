@@ -1,0 +1,117 @@
+{% extends 'includes/base.html' %}
+
+
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+
+    <h1 class="text-2xl font-semibold text-gray-800 mt-4 mb-6 text-center">Dynamic Div Creation</h1>
+    <div id="divContainer" class="w-full">
+    </div>
+    <div id="inputContainer" >
+        <input type="text" id="messageInput" placeholder="Enter your message" class="font-family: 'Inter', sans-serif;">
+        <button id="Send_message" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md py-2.5 px-5 transition duration-300 ease-in-out shadow-md">Send</button>
+    </div>
+    
+
+<script>
+    
+// Get references to HTML elements using their IDs
+const createMessage = document.getElementById('Send_message');
+const divContainer = document.getElementById('divContainer');
+const userInput = document.getElementById('messageInput');
+
+createMessage.addEventListener('click', () => {
+    //create the divs
+    const newUser = document.createElement('div');
+    const newBot = document.createElement('div');
+    newUser.classList.add('messageText'); 
+    newBot.classList.add('transformer_messsage'); 
+
+    //send the user message
+    const userMessage = userInput.value.trim();
+    newUser.innerHTML = `<p>${userMessage}</p>`;
+    console.log(userMessage)
+    divContainer.appendChild(newUser);
+    
+    //ajax request for the message from the bo
+    $.ajax({
+        url: '{% url "chatbot" %}',
+        type: 'POST',
+        data: {
+            'message': userMessage
+        },
+        success: function(response) {
+            newBot.innerHTML = `<p>${response.message}</p>`;                    
+        }
+    });
+    console.log(userMessage)
+    divContainer.appendChild(newBot);
+
+});
+
+
+</script>
+
+
+<!--
+<script>
+        //create the container div
+        const createDivButton = document.getElementById('Send_message');
+        const divContainer = document.getElementById('divContainer');
+        const messageInput = document.getElementById('messageInput');
+        const menuButton = document.getElementById('menu-button');
+        const menu = document.getElementById('menu');
+
+        menuButton.addEventListener('click', () => {
+            menu.classList.toggle('active');
+        });
+
+        createDivButton.addEventListener('click', () => {
+            const newDiv = document.createElement('div');
+            newDiv.classList.add('user_message');
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                newDiv.innerHTML = `<p class="user_message">${messageText}</p>`;
+            } else {
+                newDiv.innerHTML = '<p class="transformer_messsage">This is a new div!</p>';
+            }
+            divContainer.appendChild(newDiv);
+            const secondDiv = document.createElement('div');
+            secondDiv.classList.add('new-div', 'wwiir');
+            secondDiv.innerHTML = '<p>This is the second div!</p>';
+            divContainer.appendChild(secondDiv);
+            messageInput.value = '';
+        });
+
+         function sendMessage() {
+            var userInput = $('#user-input').val();
+            if (userInput.trim() !== '') {
+                $('#chat-messages').append('<p><strong>You:</strong> ' + userInput + '</p>');
+                $('#user-input').val('');
+
+                $.ajax({
+                    url: '{% url "chatbot" %}',
+                    type: 'POST',
+                    data: {
+                        'message': userInput
+                    },
+                    success: function(response) {
+                        $('#chat-messages').append('<p><strong>AI:</strong> ' + response.message + '</p>');
+                    }
+                });
+            }
+        }
+
+        $('#user-input').keypress(function(e) {
+            if (e.which == 13) {
+                sendMessage();
+            }
+        }); 
+</script>
+-->
+{% endblock %}
+
