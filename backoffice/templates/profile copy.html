@@ -1,0 +1,436 @@
+{% extends 'includes/base.html' %}
+
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mx-auto p-8 mt-32">
+        <section class="bg-white rounded-lg shadow-md p-8 mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">My Profile</h2>
+            <form id="profileForm" class="flex flex-col md:flex-row items-center gap-6">
+                <div class="md:w-1/3">
+                    <img src="https://via.placeholder.com/150" alt="Profile Picture" class="rounded-full mx-auto">
+                </div>
+                <div class="md:w-2/3">
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                        <input type="text" id="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="John Doe" disabled>
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                        <input type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="john.doe@example.com" disabled>
+                    </div>
+                    <div class="mb-4">
+                        <label for="location" class="block text-gray-700 text-sm font-bold mb-2">Location:</label>
+                        <input type="text" id="location" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="New York, NY" disabled>
+                    </div>
+                    <button id="editProfileBtn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Edit Profile</button>
+                    <button id="saveProfileBtn" type="submit" class="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out hidden">Save Changes</button>
+                    <button id="cancelProfileEditBtn" type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out hidden">Cancel</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-md p-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Settings</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Account Settings</h3>
+                    <ul class="space-y-3">
+                        <li class="bg-gray-50 rounded-md py-2 px-4 flex justify-between items-center">
+                            <span>Change Password</span>
+                            <button id="changePasswordTrigger" class="bg-yellow-500 hover:bg-yellow-700 text-gray-800 font-semibold rounded-md py-1 px-3 transition duration-300 ease-in-out">Change</button>
+                        </li>
+                        <li id="changePasswordForm" class="bg-gray-100 rounded-md p-4 hidden">
+                            <h4 class="text-lg font-semibold text-gray-700 mb-2">Change Password</h4>
+                            <div class="mb-4">
+                                <label for="currentPassword" class="block text-gray-700 text-sm font-bold mb-2">Current Password:</label>
+                                <input type="password" id="currentPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="mb-4">
+                                <label for="newPassword" class="block text-gray-700 text-sm font-bold mb-2">New Password:</label>
+                                <input type="password" id="newPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="mb-4">
+                                <label for="confirmPassword" class="block text-gray-700 text-sm font-bold mb-2">Confirm New Password:</label>
+                                <input type="password" id="confirmPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button id="enableEditPassword" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Enable Edit</button>
+                                <button id="savePasswordBtn" type="button" class="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out hidden">Save Changes</button>
+                                <button id="cancelPasswordBtn" type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Cancel</button>
+                            </div>
+                        </li>
+                        <li class="bg-gray-50 rounded-md py-2 px-4 flex justify-between items-center">
+                            <span>Update Email</span>
+                            <button id="updateEmailTrigger" class="bg-yellow-500 hover:bg-yellow-700 text-gray-800 font-semibold rounded-md py-1 px-3 transition duration-300 ease-in-out">Update</button>
+                        </li>
+                        <li id="updateEmailForm" class="bg-gray-100 rounded-md p-4 hidden">
+                            <h4 class="text-lg font-semibold text-gray-700 mb-2">Update Email</h4>
+                            <div class="mb-4">
+                                <label for="newEmail" class="block text-gray-700 text-sm font-bold mb-2">New Email:</label>
+                                <input type="email" id="newEmail" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button id="saveEmailBtn" type="button" class="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Save Email</button>
+                                <button id="cancelEmailBtn" type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Cancel</button>
+                            </div>
+                        </li>
+                        <li class="bg-gray-50 rounded-md py-2 px-4 flex justify-between items-center">
+                            <span>Manage Subscription</span>
+                            <button id="manageSubscriptionTrigger" class="bg-yellow-500 hover:bg-yellow-700 text-gray-800 font-semibold rounded-md py-1 px-3 transition duration-300 ease-in-out">Manage</button>
+                        </li>
+                        <li id="manageSubscriptionForm" class="bg-gray-100 rounded-md p-4 hidden">
+                            <h4 class="text-lg font-semibold text-gray-700 mb-2">Manage Subscription</h4>
+                            <p class="text-gray-600 mb-4">Select your subscription plan:</p>
+                            <div class="mb-4">
+                                <input type="radio" id="basic" name="subscription" value="basic" class="mr-2">
+                                <label for="basic" class="text-gray-700 text-sm font-semibold">Basic</label><br>
+                                <input type="radio" id="premium" name="subscription" value="premium" class="mr-2">
+                                <label for="premium" class="text-gray-700 text-sm font-semibold">Premium</label><br>
+                                <input type="radio" id="enterprise" name="subscription" value="enterprise" class="mr-2">
+                                <label for="enterprise" class="text-gray-700 text-sm font-semibold">Enterprise</label>
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button id="saveSubscriptionBtn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Save Subscription</button>
+                                <button id="cancelSubscriptionBtn" type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Cancel</button>
+                            </div>
+                        </li>
+                        <li class="bg-gray-50 rounded-md py-2 px-4 flex justify-between items-center">
+                            <span>Language Translation</span>
+                            <button id="languageTranslationTrigger" class="bg-yellow-500 hover:bg-yellow-700 text-gray-800 font-semibold rounded-md py-1 px-3 transition duration-300 ease-in-out">Translate</button>
+                        </li>
+                        <li id="languageTranslationForm" class="bg-gray-100 rounded-md p-4 hidden">
+                            <h4 class="text-lg font-semibold text-gray-700 mb-2">Language Translation</h4>
+                            <div class="mb-4">
+                                <label for="textToTranslate" class="block text-gray-700 text-sm font-bold mb-2">Text to Translate:</label>
+                                <textarea id="textToTranslate" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label for="targetLanguage" class="block text-gray-700 text-sm font-bold mb-2">Translate To:</label>
+                                <select id="targetLanguage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="it">Italian</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button id="translateBtn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Translate</button>
+                                <button id="cancelTranslationBtn" type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Cancel</button>
+                            </div>
+                        </li>
+                         <li class="bg-gray-50 rounded-md py-2 px-4 flex justify-between items-center">
+                            <span>Language Learning</span>
+                            <button id="languageLearningTrigger" class="bg-purple-500 hover:bg-purple-700 text-white font-semibold rounded-md py-1 px-3 transition duration-300 ease-in-out">Add</button>
+                        </li>
+                        <li id="languageLearningForm" class="bg-gray-100 rounded-md p-4 hidden">
+                            <h4 class="text-lg font-semibold text-gray-700 mb-2">Add Language to Learn</h4>
+                            <div class="mb-4">
+                                <label for="learningLanguage" class="block text-gray-700 text-sm font-bold mb-2">Language:</label>
+                                <select id="learningLanguage" multiple  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="">-- Select Language --</option>
+                                    {% for code, name in LANGUAGES %}
+                                        <option value="{{ code }}">{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button id="saveLearningLanguageBtn" type="button" class="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Add Language</button>
+                                <button id="cancelLearningLanguageBtn" type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Cancel</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Profile Settings</h3>
+                    <ul class="space-y-3">
+                        <li class="bg-gray-50 rounded-md py-2 px-4 flex justify-between items-center">
+                            <span>Change Profile Picture</span>
+                            <button id="changePictureTrigger" class="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md py-1 px-3 transition duration-300 ease-in-out">Change</button>
+                        </li>
+                        <li id="changePictureForm" class="bg-gray-100 rounded-md p-4 hidden">
+                            <h4 class="text-lg font-semibold text-gray-700 mb-2">Change Profile Picture</h4>
+                            <div class="mb-4">
+                                <label for="profilePicture" class="block text-gray-700 text-sm font-bold mb-2">Upload New Picture:</label>
+                                <input type="file" id="profilePicture" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button id="uploadPictureBtn" type="button" class="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Upload</button>
+                                <button id="cancelPictureBtn" type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Cancel</button>
+                            </div>
+                        </li>
+                        <li class="bg-gray -50 rounded-md py-2 px-4 flex justify-between items-center">
+                            <span>Privacy Settings</span>
+                            <button id="privacySettingsTrigger" class="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md py-1 px-3 transition duration-300 ease-in-out">View</button>
+                        </li>
+                        <li id="privacySettingsForm" class="bg-gray-100 rounded-md p-4 hidden">
+                            <h4 class="text-lg font-semibold text-gray-700 mb-2">Privacy Settings</h4>
+                            <p class="text-gray-600 mb-4">Manage your privacy options:</p>
+                            <div class="mb-4">
+                                <input type="checkbox" id="publicProfile" name="publicProfile" class="mr-2">
+                                <label for="publicProfile" class="text-gray-700 text-sm font-semibold">Make my profile public</label>
+                            </div>
+                            <div class="mb-4">
+                                <input type="checkbox" id="showLocation" name="showLocation" class="mr-2">
+                                <label for="showLocation" class="text-gray-700 text-sm font-semibold">Show my location</label>
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button id="savePrivacySettingsBtn" type="button" class="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Save Settings</button>
+                                <button id="cancelPrivacySettingsBtn" type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out">Cancel</button>
+                            </div>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // --- Change Password Form Logic ---
+            $("#changePasswordTrigger").click(function() {
+                $("#changePasswordForm").slideDown();
+                $(this).hide();
+            });
+
+            $("#cancelPasswordBtn").click(function() {
+                $("#changePasswordForm").slideUp(function() {
+                    $("#changePasswordTrigger").show();
+                    $("#currentPassword").val('');
+                    $("#newPassword").val('');
+                    $("#confirmPassword").val('');
+                    $("#enableEditPassword").show();
+                    $("#savePasswordBtn").hide();
+                    $("#currentPassword, #newPassword, #confirmPassword").prop('disabled', true);
+                });
+            });
+
+            $("#enableEditPassword").click(function() {
+                $("#currentPassword, #newPassword, #confirmPassword").prop('disabled', false);
+                $(this).hide();
+                $("#savePasswordBtn").show();
+            });
+
+            $("#savePasswordBtn").click(function() {
+                const currentPassword = $("#currentPassword").val();
+                const newPassword = $("#newPassword").val();
+                const confirmPassword = $("#confirmPassword").val();
+
+                if (newPassword !== confirmPassword) {
+                    alert("New passwords do not match!");
+                    return;
+                }
+
+                console.log("Saving password:", { currentPassword, newPassword });
+                alert("Password changed successfully! (This is a simulation)");
+
+                $("#changePasswordForm").slideUp(function() {
+                    $("#changePasswordTrigger").show();
+                    $("#currentPassword").val('');
+                    $("#newPassword").val('');
+                    $("#confirmPassword").val('');
+                    $("#enableEditPassword").show();
+                    $("#savePasswordBtn").hide();
+                    $("#currentPassword, #newPassword, #confirmPassword").prop('disabled', true);
+                });
+            });
+
+            // --- Update Email Form Logic ---
+            $("#updateEmailTrigger").click(function() {
+                $("#updateEmailForm").slideDown();
+                $(this).hide();
+            });
+
+            $("#cancelEmailBtn").click(function() {
+                $("#updateEmailForm").slideUp(function() {
+                    $("#updateEmailTrigger").show();
+                    $("#newEmail").val('');
+                });
+            });
+
+            $("#saveEmailBtn").click(function() {
+                const newEmail = $("#newEmail").val();
+                console.log("Saving new email:", { newEmail });
+                alert(`Email updated to ${newEmail}! (This is a simulation)`);
+                $("#updateEmailForm").slideUp(function() {
+                    $("#updateEmailTrigger").show();
+                    $("#newEmail").val('');
+                });
+            });
+
+            // --- Manage Subscription Logic ---
+            $("#manageSubscriptionTrigger").click(function() {
+                $("#manageSubscriptionForm").slideDown();
+                $(this).hide();
+            });
+
+            $("#cancelSubscriptionBtn").click(function() {
+                $("#manageSubscriptionForm").slideUp(function() {
+                    $("#manageSubscriptionTrigger").show();
+                });
+            });
+
+            $("#saveSubscriptionBtn").click(function() {
+                const selectedSubscription = $("input[name='subscription']:checked").val();
+                if (selectedSubscription) {
+                    console.log("Saving subscription:", { selectedSubscription });
+                    alert(`Subscription updated to ${selectedSubscription}! (This is a simulation)`);
+                    $("#manageSubscriptionForm").slideUp(function() {
+                        $("#manageSubscriptionTrigger").show();
+                    });
+                    // In a real application, you would handle the subscription update.
+                } else {
+                    alert("Please select a subscription plan.");
+                }
+            });
+
+            // --- Language Translation Logic ---
+            $("#languageTranslationTrigger").click(function() {
+                $("#languageTranslationForm").slideDown();
+                $(this).hide();
+            });
+
+            $("#cancelTranslationBtn").click(function() {
+                $("#languageTranslationForm").slideUp(function() {
+                    $("#languageTranslationTrigger").show();
+                    $("#textToTranslate").val('');
+                });
+            });
+
+            $("#translateBtn").click(function() {
+                const textToTranslate = $("#textToTranslate").val();
+                const targetLanguage = $("#targetLanguage").val();
+                if (textToTranslate) {
+                    console.log("Translating:", { textToTranslate, targetLanguage });
+                    alert(`"${textToTranslate}" translated to ${$("#targetLanguage option:selected").text()}! (This is a simulation)`);
+                    // In a real application, you would call a translation API.
+                } else {
+                    alert("Please enter text to translate.");
+                }
+            });
+
+            
+
+            // --- Change Profile Picture Logic ---
+            $("#changePictureTrigger").click(function() {
+                $("#changePictureForm").slideDown();
+                $(this).hide();
+            });
+
+            $("#cancelPictureBtn").click(function() {
+                $("#changePictureForm").slideUp(function() {
+                    $("#changePictureTrigger").show();
+                    $("#profilePicture").val(''); // Clear the file input
+                });
+            });
+
+            $("#uploadPictureBtn").click(function() {
+                const profilePicture = $("#profilePicture").val();
+                if (profilePicture) {
+                    console.log("Uploading new profile picture:", { profilePicture });
+                    alert("Profile picture uploaded successfully! (This is a simulation)");
+                    $("#changePictureForm").slideUp(function() {
+                        $("#changePictureTrigger").show();
+                        $("#profilePicture").val('');
+                    });
+                    // In a real application, you would handle the file upload.
+                } else {
+                    alert("Please select a profile picture to upload.");
+                }
+            });
+
+            // --- Privacy Settings Logic ---
+            $("#privacySettingsTrigger").click(function() {
+                $("#privacySettingsForm").slideDown();
+                $(this).hide();
+            });
+
+            $("#cancelPrivacySettingsBtn").click(function() {
+                $("#privacySettingsForm").slideUp(function() {
+                    $("#privacySettingsTrigger").show();
+                });
+            });
+
+            $("#savePrivacySettingsBtn").click(function() {
+                const publicProfile = $("#publicProfile").is(":checked");
+                const showLocation = $("#showLocation").is(":checked");
+                console.log("Saving privacy settings:", { publicProfile, showLocation });
+                alert("Privacy settings saved! (This is a simulation)");
+                $("#privacySettingsForm").slideUp(function() {
+                    $("#privacySettingsTrigger").show();
+                });
+                // In a real application, you would save the privacy settings.
+            });
+
+            // --- Language Learning Logic ---
+            $("#languageLearningTrigger").click(function() {
+                $("#languageLearningForm").slideDown();
+                $(this).hide();
+            });
+
+            $("#cancelLearningLanguageBtn").click(function() {
+                $("#languageLearningForm").slideUp(function() {
+                    $("#languageLearningTrigger").show();
+                    $("#learningLanguage").val('');
+                });
+            });
+
+            $("#saveLearningLanguageBtn").click(function() {
+                const learningLanguageCode = $("#learningLanguage").val();
+                const learningLanguageName = $("#learningLanguage option:selected").text();
+                if (learningLanguageCode) {
+                    console.log("Adding language to learn:", { code: learningLanguageCode, name: learningLanguageName });
+                    alert(`Added ${learningLanguageName} to your learning languages! (Code: ${learningLanguageCode} - This is a simulation)`);
+                    $("#languageLearningForm").slideUp(function() {
+                        $("#languageLearningTrigger").show();
+                        $("#learningLanguage").val('');
+                    });
+                    // In a real application, you would save the learningLanguageCode to the user's profile.
+                } else {
+                    alert("Please select a language to add.");
+                }
+            });
+
+            // --- Edit Profile Form Logic ---
+            $("#editProfileBtn").click(function() {
+                $("#name").prop('disabled', false).focus();
+                $("#email").prop('disabled', false);
+                $("#location").prop('disabled', false);
+                $(this).hide();
+                $("#saveProfileBtn").show();
+                $("#cancelProfileEditBtn").show();
+            });
+
+            $("#cancelProfileEditBtn").click(function() {
+                $("#name").prop('disabled', true).val("John Doe");
+                $("#email").prop('disabled', true).val("john.doe@example.com");
+                $("#location").prop('disabled', true).val("New York, NY");
+                $(this).hide();
+                $("#saveProfileBtn").hide();
+                $("#editProfileBtn").show();
+            });
+
+            $("#profileForm").submit(function(event) {
+                event.preventDefault();
+                const name = $("#name").val();
+                const email = $("#email").val();
+                const location = $("#location").val();
+
+                console.log("Saving profile:", { name, email, location });
+                alert("Profile updated successfully! (This is a simulation)");
+
+                $("#name").prop('disabled', true);
+                $("#email").prop('disabled', true);
+                $("#location").prop('disabled', true);
+                $("#saveProfileBtn").hide();
+                $("#cancelProfileEditBtn").hide();
+                $("#editProfileBtn").show();
+            });
+        });
+    </script>
+
+{% endblock %}

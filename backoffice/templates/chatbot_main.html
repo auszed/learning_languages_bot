@@ -12,106 +12,90 @@
     <div id="divContainer" class="w-full">
     </div>
     <div id="inputContainer" >
-        <input type="text" id="messageInput" placeholder="Enter your message" class="font-family: 'Inter', sans-serif;">
-        <button id="Send_message" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md py-2.5 px-5 transition duration-300 ease-in-out shadow-md">Send</button>
+        <textarea type="text" id="messageInput" placeholder="Enter your message" rows="3"  class="font-family: 'Inter', sans-serif;"></textarea>
+        <button id="Send_message" class="bg-blue-500 hover:bg-primary-700 text-white font-semibold rounded-md py-2.5 px-5 transition duration-300 ease-in-out shadow-md">Send</button>
+        
+        <!-- dropdown menu button-->
+        <form method="post" action="{% url 'chatbot' %}">
+            {% csrf_token %}
+            <div id="Choose_language_div" class="relative">
+            <select id="Choose_language" name="selected_language" class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                <option value="Spanish">Spanish</option>
+                <option value="English">English</option>
+                <option value="French">French</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+            </div>
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-md py-2.5 px-5 mt-4 transition duration-300 ease-in-out shadow-md">Submit Language</button>
+        </form>
     </div>
     
 
-<script>
-    
-// Get references to HTML elements using their IDs
-const createMessage = document.getElementById('Send_message');
-const divContainer = document.getElementById('divContainer');
-const userInput = document.getElementById('messageInput');
+    <script>
+    // Get references to HTML elements using their IDs
+    const createMessage = document.getElementById('Send_message');
+    const divContainer = document.getElementById('divContainer');
+    const userInput = document.getElementById('messageInput');
+    const chooseLanguage = document.getElementById('Choose_language');
 
-createMessage.addEventListener('click', () => {
-    //create the divs
-    const newUser = document.createElement('div');
-    const newBot = document.createElement('div');
-    newUser.classList.add('messageText'); 
-    newBot.classList.add('transformer_messsage'); 
+    // Function to handle sending the message
+    function handleSendMessage() {
+        const userMessage = userInput.value.trim();
+        if (!userMessage) return;
 
-    //send the user message
-    const userMessage = userInput.value.trim();
-    newUser.innerHTML = `<p>${userMessage}</p>`;
-    console.log(userMessage)
-    divContainer.appendChild(newUser);
-    
-    //ajax request for the message from the bo
-    $.ajax({
-        url: '{% url "chatbot" %}',
-        type: 'POST',
-        data: {
-            'message': userMessage
-        },
-        success: function(response) {
-            newBot.innerHTML = `<p>${response.message}</p>`;                    
+        // Create user and bot message divs
+        const newUser = document.createElement('div');
+        const newBot = document.createElement('div');
+        newUser.classList.add('messageText'); 
+        newBot.classList.add('transformer_messsage'); 
+
+        // POST request to get translated user message
+        $.ajax({
+            url: '{% url "post_TranslationUserMessage" %}',
+            type: 'POST',
+            data: {
+                'message_translation': userMessage,
+                'language': chooseLanguage.value 
+            },
+            success: function(response) {
+                newUser.innerHTML = `<p>${userMessage} <br> <i style="font-size: 0.8em;"> ${response.message} </i></p>`; 
+                divContainer.appendChild(newUser);                   
+            }
+        });
+
+        // POST request to get AI response
+        $.ajax({
+            url: '{% url "post_ai_response" %}',
+            type: 'POST',
+            data: {
+                'message_translation': userMessage,
+                'language': chooseLanguage.value 
+            },
+            success: function(response) {
+                newBot.innerHTML = `<p>${response.message} <br> <i style="font-size: 0.8em;"> ${response.message_translation} </i></p>`; 
+                divContainer.appendChild(newBot);                   
+            }
+        });
+
+        // Clear input and keep focus
+        userInput.value = '';
+        userInput.focus();
+    }
+
+    // Handle button click
+    createMessage.addEventListener('click', handleSendMessage);
+
+    // Handle Enter key (with Shift+Enter for newline)
+    userInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
         }
     });
-    console.log(userMessage)
-    divContainer.appendChild(newBot);
-
-});
-
-
 </script>
 
-
-<!--
-<script>
-        //create the container div
-        const createDivButton = document.getElementById('Send_message');
-        const divContainer = document.getElementById('divContainer');
-        const messageInput = document.getElementById('messageInput');
-        const menuButton = document.getElementById('menu-button');
-        const menu = document.getElementById('menu');
-
-        menuButton.addEventListener('click', () => {
-            menu.classList.toggle('active');
-        });
-
-        createDivButton.addEventListener('click', () => {
-            const newDiv = document.createElement('div');
-            newDiv.classList.add('user_message');
-            const messageText = messageInput.value.trim();
-            if (messageText) {
-                newDiv.innerHTML = `<p class="user_message">${messageText}</p>`;
-            } else {
-                newDiv.innerHTML = '<p class="transformer_messsage">This is a new div!</p>';
-            }
-            divContainer.appendChild(newDiv);
-            const secondDiv = document.createElement('div');
-            secondDiv.classList.add('new-div', 'wwiir');
-            secondDiv.innerHTML = '<p>This is the second div!</p>';
-            divContainer.appendChild(secondDiv);
-            messageInput.value = '';
-        });
-
-         function sendMessage() {
-            var userInput = $('#user-input').val();
-            if (userInput.trim() !== '') {
-                $('#chat-messages').append('<p><strong>You:</strong> ' + userInput + '</p>');
-                $('#user-input').val('');
-
-                $.ajax({
-                    url: '{% url "chatbot" %}',
-                    type: 'POST',
-                    data: {
-                        'message': userInput
-                    },
-                    success: function(response) {
-                        $('#chat-messages').append('<p><strong>AI:</strong> ' + response.message + '</p>');
-                    }
-                });
-            }
-        }
-
-        $('#user-input').keypress(function(e) {
-            if (e.which == 13) {
-                sendMessage();
-            }
-        }); 
-</script>
--->
 {% endblock %}
+
 

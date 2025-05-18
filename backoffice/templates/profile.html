@@ -1,0 +1,81 @@
+{% extends 'includes/base.html' %}
+
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>User Profile & Settings</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <h3>Profile Information ({{ user.username }})</h3>
+        <div class="mb-3">
+            <label for="location" class="form-label">Location:</label>
+            <input type="text" class="form-control" id="location" name="location" value="{{ user_profile.location|default_if_none:'' }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="profile_picture" class="form-label">Profile Picture:</label>
+            {% if user_profile.profile_picture %}
+                <p>Current: <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" style="max-height: 100px; border-radius: 50%;"></p>
+            {% endif %}
+            <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept="image/*">
+        </div>
+
+        <hr>
+
+        <h3>Account Settings</h3>
+        <div class="mb-3">
+            <label for="subscription_plan" class="form-label">Subscription Plan:</label>
+            <select class="form-select" id="subscription_plan" name="subscription_plan">
+                {% for value, display_name in SUBSCRIPTION_CHOICES %}
+                    <option value="{{ value }}" {% if user_settings.subscription_plan == value %}selected{% endif %}>
+                        {{ display_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="preferred_language" class="form-label">Preferred Display Language:</label>
+            <select class="form-select" id="preferred_language" name="preferred_language">
+                {% for code, name in LANGUAGES_CHOICES %}
+                    <option value="{{ code }}" {% if user_settings.preferred_language == code %}selected{% endif %}>
+                        {{ name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="language_learning" class="form-label">Languages you are learning:</label>
+            <select class="form-select" id="language_learning" name="language_learning" multiple size="5">
+                {% for lang_model in ALL_LEARNING_LANGUAGES %}
+                    <option value="{{ lang_model.code }}" {% if lang_model.code in SELECTED_LEARNING_LANGUAGES_CODES %}selected{% endif %}>
+                        {{ lang_model.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <small class="form-text text-muted">Hold Ctrl (or Cmd on Mac) to select multiple languages.</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+
+    <hr>
+    <p><a href="{% url 'logout' %}" class="btn btn-outline-secondary">Logout</a></p>
+</div>
+    
+
+{% endblock %}

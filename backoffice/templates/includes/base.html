@@ -21,19 +21,28 @@
         </svg>
     </div>
     <div id="menu">
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Logout</a></li>
+        {% if request.resolver_match.url_name == 'chatbot'%}
+            <ul>
+                <li><a href="{% url 'profile'%}">Profile</a></li>
+                <li><a href="{% url 'logout'%}">Logout</a></li>
+            </ul>
+        {% endif%}
+        {% if request.resolver_match.url_name == 'profile'%}
+            <ul>
+                <li><a href="{% url 'chatbot'%}">chatbot</a></li>
+                <li><a href="{% url 'logout'%}">Logout</a></li>
+            </ul>
+        {% endif%}
         </ul>
     </div>
     <div class="user-circle">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-        </svg>
+        <a href="{% url 'profile'%}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
+        </a>
     </div>
-
+{{url_name}}
 {% block content %}
 {% endblock %}
 
@@ -44,6 +53,7 @@
     menuButton.addEventListener('click', () => {
         menu.classList.toggle('active');
     });
+
 </script>
 </body>
 </html>
