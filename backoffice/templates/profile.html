@@ -16,7 +16,7 @@
         {% endfor %}
     {% endif %}
 
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'portal:profile' %}">
         {% csrf_token %}
 
         <h3>Profile Information ({{ user.username }})</h3>

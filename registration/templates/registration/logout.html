@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %} header {% endcomment %}
+{% block head %}
+  {% block title %}AI-Fluent - Logout{% endblock %}
+  <meta name="description" content="Logout from AI-Fluent...">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% comment %} body {% endcomment %}
+{% block body %}
+    {% include 'includes/header.html' %}
+
+    {% block content %}
+   <div class="flex items-center justify-center h-screen bg-gray-300">
+  <div class="bg-white p-8 rounded shadow-md w-96">
+    <div class="flex justify-center mb-4">
+      {% include 'includes/logo.html' %} 
+    </div>
+    <h2 class="text-2xl font-semibold text-center mb-6">Logout</h2>
+    
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="p-4 {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} rounded">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <p class="text-center mb-6">Are you sure you want to logout?</p>
+      <button class="bg-primary hover:bg-primary/80 text-gray-900 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full" type="submit">
+        Logout
+      </button>
+    </form>
+    <p class="text-center text-gray-600 text-xs mt-4">
+      Changed your mind? <a href="{% url 'registration:login' %}" class="text-primary-600 hover:underline">Sign in</a>
+    </p>
+  </div>
+</div>
+
+    {% endblock %} 
+    {% include 'includes/footer.html' %} 
+
+    {% include 'includes/footer.html' %} 
+    <script src="{% static '/js/colors.js' %}"></script>
+    {% block scripts %}
+{% endblock %} {% endblock %}

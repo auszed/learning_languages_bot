@@ -32,7 +32,7 @@
               <div class="hero-actions">
 
                 <button class="btn btn-primary btn-lg"
-                 onclick="window.location.href='{% url 'sign_up_new' %}'">Start Learning For Free</button>
+                 onclick="window.location.href='{% url 'registration:signup' %}'">Start Learning For Free</button>
                  
                 <button class="btn btn-outline btn-lg">
                   <span>How It Works</span>
@@ -159,7 +159,7 @@
           </div>
 
           <div class="centered-button">
-            <button class="btn btn-primary btn-lg">Start Learning Today</button>
+            <button class="btn btn-primary btn-lg" onclick="window.location.href='{% url 'registration:signup' %}'">Start Learning Today</button>
           </div>
         </div>
       </section>

@@ -144,8 +144,15 @@ venv\Scripts\activate
 ```
 
 
+================================
+## create logins auth
 
-
+create an app for registration for the app
+```
+python manage.py startapp registration
+```
+this its the url of it
+http://127.0.0.1:8000/accounts/
 
 
 

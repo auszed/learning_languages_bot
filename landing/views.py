@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 # login auth setup
 from django.contrib.auth import get_user_model, login
@@ -24,58 +26,62 @@ def pre_order(request):
 
 def signin(request):
     """signin to the backoffice"""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        print(f"Attempting signin with email: {email}")
+        print(f"Password provided: {'<present>' if password else '<empty>'}")
+        user = authenticate(request, username=email, password=password)
+        
+        print(f"Authentication result: {user}")
+        if user is not None:
+            print("User authenticated successfully.")
+            login(request, user)
+            messages.success(request, f"Welcome back, {user.first_name}!")
+            print("Redirecting to portal:chatbot")
+            return redirect('portal:chatbot')  # Redirect to backoffice
+        else:
+            print("Authentication failed.")
+            messages.error(request, "Invalid email or password. Please try again.")
+    
     return render(request, 'signin.html')
 
 def sign_up_new(request):
     if request.user.is_authenticated: # If user is already logged in, redirect them
-        return redirect('home') # Or a dashboard page
+        return redirect('portal:chatbot') # Redirect to backoffice
 
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             try:
                 user = form.save()
-                # Optional: Log the user in immediately after registration
-                login(request, user, backend='django.contrib.auth.backends.ModelBackend') # Specify backend
+                # Log the user in immediately after registration
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 messages.success(request, f"Account created successfully for {user.email}! You are now logged in.")
-                return redirect('home') # Redirect to home page or a 'welcome' page
+                return redirect('portal:chatbot') # Redirect to backoffice
             except Exception as e:
-                # This is a general catch, specific errors should be handled by form validation
                 messages.error(request, f"An error occurred during registration: {e}")
         else:
-            # Form is not valid, errors will be bound to the form instance
-            # and can be displayed in the template.
-            # Create a single message for all form errors for simplicity, or let the template handle field errors.
             error_messages = []
             for field, errors in form.errors.items():
                 for error in errors:
-                    if field == '__all__': # Non-field errors
+                    if field == '__all__':
                          error_messages.append(f"{error}")
                     else:
                         error_messages.append(f"{form.fields[field].label or field.replace('_', ' ').title()}: {error}")
             if error_messages:
                 messages.error(request, "Please correct the errors below: " + "; ".join(error_messages))
-            else: # Fallback generic error
+            else:
                 messages.error(request, "There was an issue with your submission. Please check the details and try again.")
 
-
-    else: # For a GET request
+    else:
         form = UserRegistrationForm()
 
-    # Prepare context to pass to the template
-    # We pass the original request.POST data back to the template on POST if there are errors,
-    # so the form fields can be re-populated. Django forms handle this automatically when you pass `form` instance.
     context = {
         'form': form,
-        'current_page': 'register' # For highlighting active nav link, if needed
+        'current_page': 'register'
     }
-    # Assuming your registration template is named 'registration/register.html' or similar
-    # and is in a 'templates/registration/' directory within your app or project's templates folder.
-    # Your template extends 'base.html' and is in the root of your templates dir for the app.
-    # Let's assume your template file is named `preorder_form.html` (based on your css `style_preorder.css`)
-    # or you create a new one like `register.html`.
-    # For this example, let's say the template you provided is `account/register.html`
-    return render(request, 'sign_up_new.html', context) # Update 'account/register.html' to your actual template path
+    return render(request, 'sign_up_new.html', context)
 
 
 

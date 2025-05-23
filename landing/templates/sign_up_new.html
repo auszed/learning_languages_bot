@@ -23,30 +23,39 @@
     <div class="flex justify-center mb-4">
       {% include 'includes/logo.html' %} 
     </div>
-    <h2 class="text-2xl font-semibold text-center mb-2">Create Account</h2>
-    <p class="text-gray-600 text-center mb-4">Join AI Fluent today</p>
+    <h2 class="text-2xl font-semibold text-center mb-6">Create Account</h2>
+    
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="p-4 {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} rounded">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <div class="mb-4">
-    <form method="post" action="{% url 'home' %}">  {#  Use the URL name #}
-        {% csrf_token %}  {#  Don't forget the CSRF token #}
+    <form method="post" action="{% url 'sign_up_new' %}">
+        {% csrf_token %}
         <label for="first_name">First Name:</label><br>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="first_name" name="first_name" value="{{ request.POST.first_name }}"><br><br>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="first_name" name="first_name" value="{{ request.POST.first_name }}" required><br><br>
         <label for="last_name">Last Name:</label><br>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="last_name" name="last_name" value="{{ request.POST.last_name }}"><br><br>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="last_name" name="last_name" value="{{ request.POST.last_name }}" required><br><br>
         <label for="email">Email:</label><br>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  type="email" id="email" name="email" value="{{ request.POST.email }}"><br><br>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  type="email" id="email" name="email" value="{{ request.POST.email }}" required><br><br>
         <label for="password">Password:</label><br>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  type="password" id="password" name="password"><br><br>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  type="password" id="password" name="password" required><br><br>
         <label for="confirm_password">Confirm Password:</label><br>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  type="password" id="confirm_password" name="confirm_password"><br><br>
-        <input type="checkbox" id="terms_agreement" name="terms_agreement">
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  type="password" id="confirm_password" name="confirm_password" required><br><br>
+        <input type="checkbox" id="terms_agreement" name="terms_agreement" required>
         <label for="terms_agreement">I agree to the Terms of Service and Privacy Policy</label><br><br>
-        <input type="submit" value="Create Account">
+        <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Create Account</button>
     </form>
     </div>
 
     <p class="text-center text-gray-600 text-xs mt-4">
-      Already have an account? <a href="#" class="text-primary-600 hover:underline">Sign in</a>
+      Already have an account? <a href="{% url 'signin' %}" class="text-primary-600 hover:underline">Sign in</a>
     </p>
   </div>
 </div>

@@ -1,0 +1,121 @@
+{% extends 'include_log/base.html' %}
+{% load static %}
+
+{% block title %}AI-Fluent - Language Learning{% endblock %}
+
+{% block head %}
+  <meta name="description" content="Learn languages faster with AI-Fluent...">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" type="text/css" href="{% static '/css/styles.css' %}">
+{% endblock %}
+
+
+{% block body %}
+{% include 'include_log/header.html' %} 
+
+<div class="flex items-center justify-center h-screen bg-gray-300">
+  <div class="bg-white p-8 rounded shadow-md w-96">
+    <div class="flex justify-center mb-4">
+      <style>.errorlist{color:red;} label{display:none}</style>
+      
+    </div>
+    {% include 'includes/logo.html' %} 
+    <h2 class="text-2xl font-semibold text-center mb-2">Create Account</h2>
+    <p class="text-gray-600 text-center mb-4">Join AI Fluent today</p>
+    <div class="mb-4">
+        <form method="post" action="{% url 'home' %}">
+            
+            {% csrf_token %}
+            {% if form.errors %}
+                <ul class="errorlist">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+                        {% endif %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error|striptags }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="mb-2">
+                <label for="{{ form.first_name.first_name }}" class="sr-only">First Name</label>
+                {{ form.first_name }}
+            </div>
+            <div class="mb-2">
+                <label for="{{ form.last_name.id_for_label }}" class="sr-only">Last Name</label>
+                {{ form.last_name }}
+            </div>
+            <div class="mb-2">
+                <label for="{{ form.email.id_for_label }}" class="sr-only">Email</label>
+                {{ form.email }}
+            </div>
+            <div class="mb-2">
+                <label for="{{ form.password.id_for_label }}" class="sr-only">Password</label>
+                {{ form.password }}
+            </div>
+            <div class="mb-2">
+                <label for="{{ form.confirm_password.id_for_label }}" class="sr-only">Confirm Password</label>
+                {{ form.confirm_password }}
+            </div>
+            <div class="mb-2">
+                {{ form.terms_agreement }}
+                <label for="{{ form.terms_agreement.id_for_label }}" class="inline">I agree to the Terms of Service and Privacy Policy</label>
+            </div>
+            <button type="submit" class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Account</button>
+        </form>
+    </div>
+  </div>
+</div>
+---------------------------
+<div class="flex items-center justify-center h-screen bg-gray-300">
+  <div class="bg-white p-8 rounded shadow-md w-96">
+    <div class="flex justify-center mb-4">
+      <style>.errorlist{color:red;} label{display:none}</style>
+      
+    </div>
+    <h2 class="text-2xl font-semibold text-center mb-2">Create Account</h2>
+    <p class="text-gray-600 text-center mb-4">Join AI Fluent today</p>
+
+    <div class="mb-4">
+    <form method="post" action="{% url 'home' %}">  {#  Use the URL name #}
+        {% csrf_token %}  {#  Don't forget the CSRF token #}
+        {% if form.errors %}
+                <ul class="errorlist">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+                        {% endif %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error|striptags }}</li>
+                    {% endfor %}
+                </ul>
+        {% endif %}
+        <label for="first_name">First Name:</label><br>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="first_name" name="first_name" value="{{ request.POST.first_name }}"><br><br>
+        <label for="last_name">Last Name:</label><br>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="last_name" name="last_name" value="{{ request.POST.last_name }}"><br><br>
+        <label for="email">Email:</label><br>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  type="email" id="email" name="email" value="{{ request.POST.email }}"><br><br>
+        <label for="password">Password:</label><br>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  type="password" id="password" name="password"><br><br>
+        <label for="confirm_password">Confirm Password:</label><br>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  type="password" id="confirm_password" name="confirm_password"><br><br>
+        <input type="checkbox" id="terms_agreement" name="terms_agreement">
+        <label for="terms_agreement">I agree to the Terms of Service and Privacy Policy</label><br><br>
+        <input type="submit" value="Create Account">
+    </form>
+    </div>
+
+    <p class="text-center text-gray-600 text-xs mt-4">
+      Already have an account? <a href="#" class="text-primary-600 hover:underline">Sign in</a>
+    </p>
+  </div>
+</div>
+
+
+    {% include 'include_log/footer.html' %} 
+{% endblock %} 

@@ -182,7 +182,7 @@ def profile_view(request):
         user_settings.save()
 
         messages.success(request, 'Your profile and settings have been updated successfully!')
-        return HttpResponseRedirect(reverse('profile_view')) # Redirect to the same page (PRG pattern)
+        return HttpResponseRedirect(reverse('portal:profile')) # Redirect to the same page (PRG pattern)
 
     # For GET request (or if POST had errors and re-renders)
     all_learning_languages = LanguageModel.objects.all() # For the 'language_learning' multi-select
@@ -203,6 +203,6 @@ def logout_view(request):
     """
     View to handle user logout.
     """
-    # logout(request)  # Log the user out
+    logout(request)  # Log the user out
     messages.info(request, "You have been successfully logged out.")
-    return redirect('home')  # Redirect to the home page (or any other page you want)
+    return redirect('/home')
